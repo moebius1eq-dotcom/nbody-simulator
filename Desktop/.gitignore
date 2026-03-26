@@ -1,0 +1,15 @@
+# Virtual environment
+nbody_env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Output files
+*.mp4
+*.gif
+
+# OS
+.DS_Store
+Thumbs.db
