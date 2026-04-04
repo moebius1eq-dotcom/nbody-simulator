@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://physicslab-six.vercel.app/sitemap.xml
