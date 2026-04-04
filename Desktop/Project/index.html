@@ -7,6 +7,13 @@
 <meta name="description" content="20 beautiful, interactive physics simulations for students. Mechanics, waves, optics, E&M, thermodynamics — all free, no ads.">
 <meta property="og:title" content="PhysicsLab — Interactive Physics Simulations">
 <meta property="og:description" content="20 beautiful, interactive physics simulations. Free forever.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PhysicsLab — Interactive Physics Simulations">
+<meta name="twitter:description" content="20 beautiful, interactive physics simulations. Free forever.">
+<meta name="twitter:image" content="/og.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%2300d4ff'/><stop offset='100%' stop-color='%238b5cf6'/></linearGradient></defs><circle cx='50' cy='50' r='45' fill='none' stroke='url(%23g)' stroke-width='6'/><circle cx='50' cy='20' r='6' fill='%2300d4ff'/><ellipse cx='50' cy='50' rx='38' ry='15' fill='none' stroke='url(%23g)' stroke-width='3' transform='rotate(-30 50 50)'/><ellipse cx='50' cy='50' rx='38' ry='15' fill='none' stroke='url(%23g)' stroke-width='3' transform='rotate(30 50 50)'/><circle cx='50' cy='50' r='5' fill='%238b5cf6'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -127,15 +134,38 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bor
 .ebar-fill{height:100%;border-radius:4px;transition:width .05s linear}
 .ebar-val{width:48px;text-align:right;font-variant-numeric:tabular-nums;font-size:.7rem;color:var(--text-muted)}
 
+/* Mobile controls toggle */
+.ctrl-toggle{display:none;position:absolute;bottom:16px;right:16px;z-index:5;width:40px;height:40px;
+  border:1px solid var(--border);border-radius:50%;background:rgba(8,9,13,0.85);backdrop-filter:blur(12px);
+  color:var(--primary);font-size:1.1rem;cursor:pointer;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(0,0,0,0.4);transition:all .2s}
+.ctrl-toggle:hover{background:rgba(0,212,255,0.15);transform:scale(1.08)}
+
 @media(max-width:860px){
-  .controls-panel{width:100%;max-height:180px;border-left:none;border-top:1px solid var(--border);flex-direction:row;flex-wrap:wrap;padding:10px}
-  .lab-main{flex-direction:column}
-  .ctrl-section{min-width:130px;flex:1}
+  .lab-main{flex-direction:column;position:relative}
+  .controls-panel{position:absolute;bottom:0;left:0;right:0;z-index:4;width:100%;max-height:45vh;
+    border-left:none;border-top:1px solid var(--border);flex-direction:column;padding:14px;
+    transform:translateY(100%);transition:transform .3s ease;overflow-y:auto}
+  .controls-panel.mobile-open{transform:translateY(0)}
+  .ctrl-toggle{display:flex}
   .hero h1{font-size:2.2rem}
+  .hero p{font-size:1rem}
   .hero-stats{gap:20px}
   .feat-grid{grid-template-columns:1fr 1fr}
+  .nav-dd-btn{padding:6px 10px;font-size:.76rem}
+  .navbar{padding:6px 10px;gap:6px}
+  .nav-logo{font-size:.9rem}
+  .info-card{font-size:.72rem;padding:8px 10px;min-width:140px}
+  .land-nav{padding:14px 20px}
+  .hero{padding:60px 16px 40px}
+  .features{padding:30px 16px 50px}
 }
-@media(max-width:480px){.feat-grid{grid-template-columns:1fr}}
+@media(max-width:480px){
+  .feat-grid{grid-template-columns:1fr}
+  .hero h1{font-size:1.8rem}
+  .nav-cats{gap:1px}
+  .nav-dd-btn{padding:5px 7px;font-size:.72rem}
+}
 </style>
 </head>
 <body>
@@ -192,7 +222,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bor
       </div>
     </div>
   </div>
-  <div class="land-footer">Built for students, by a student. Free forever, no ads, no sign-up.</div>
+  <div class="land-footer">I'm a student and I built this because physics textbooks shouldn't be static.<br>Free forever, no ads, no sign-up. Feedback welcome.</div>
 </div>
 
 <!-- ===== LAB VIEW ===== -->
@@ -210,6 +240,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bor
       <canvas id="canvas"></canvas>
       <div class="info-overlay" id="info-overlay"></div>
       <div class="hint-overlay" id="hint"></div>
+      <button class="ctrl-toggle" id="ctrl-toggle" title="Toggle Controls">&#9881;</button>
     </div>
     <div class="controls-panel" id="controls"></div>
   </div>
@@ -733,6 +764,7 @@ const app={
     this._buildNav();
     document.getElementById('pause-btn').addEventListener('click',()=>this.togglePause());
     document.getElementById('reset-btn').addEventListener('click',()=>this.resetSim());
+    document.getElementById('ctrl-toggle').addEventListener('click',()=>{const p=document.getElementById('controls');p.classList.toggle('mobile-open');});
     window.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.code==='Space'){e.preventDefault();this.togglePause();}if(e.code==='KeyR')this.resetSim();});
     this.canvas.addEventListener('mousedown',e=>this._mouse(e,'down'));
     this.canvas.addEventListener('mousemove',e=>this._mouse(e,'move'));
